@@ -18,5 +18,11 @@ def repeat():
             camera_index = 0
             capture = cv.CaptureFromCAM(camera_index)
 
-while True:
-    repeat()
+
+def main():
+    while True:
+        repeat()
+
+
+if __name__ == '__main__':
+    main()
