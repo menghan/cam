@@ -24,9 +24,9 @@ def get_frame_hist(frame):
     return hist
 
 
-def get_file_name(i):
+def get_file_name():
     now = datetime.datetime.now()
-    return 'image%08d-%s.png' % (i, now.isoformat())
+    return 'image-%s.jpg' % now.isoformat()
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
             dist = cv.CompareHist(hist, last_hist, method)
             change = dist <= 0.99
             if change:
-                cv.SaveImage(get_file_name(i), frame)
+                cv.SaveImage(get_file_name(), frame)
         last_hist = hist
         if change:
             interval = 0.75
