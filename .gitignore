@@ -33,3 +33,10 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# vim
+.*.swp
+
+# test or example files
+/ex*.py
+/test*
