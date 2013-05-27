@@ -3,6 +3,7 @@
 
 import sys
 import time
+import datetime
 
 import cv
 
@@ -24,7 +25,8 @@ def get_frame_hist(frame):
 
 
 def get_file_name(i):
-    return 'image%08d.png' % i
+    now = datetime.datetime.now()
+    return 'image%08d-%s.png' % (i, now.isoformat())
 
 
 def main():
@@ -35,12 +37,18 @@ def main():
     for i in xrange(sys.maxint):
         frame = get_gray_frame(capture)
         hist = get_frame_hist(frame)
+        change = False
         if i > 0:
             method = cv.CV_COMP_CORREL
             dist = cv.CompareHist(hist, last_hist, method)
-            if dist <= 0.99:
+            change = dist <= 0.99
+            if change:
                 cv.SaveImage(get_file_name(i), frame)
         last_hist = hist
+        if change:
+            interval = 0.75
+        else:
+            interval = 1
         time.sleep(interval)
         if time.time() - start_time > time_span:
             break
