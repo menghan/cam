@@ -30,28 +30,28 @@ def get_file_name():
 
 
 def main():
-    time_span = 3600 * 10
     interval = 1
-    start_time = time.time()
     capture = cv.CaptureFromCAM(0)
-    for i in xrange(sys.maxint):
-        frame = get_gray_frame(capture)
-        hist = get_frame_hist(frame)
-        change = False
-        if i > 0:
-            method = cv.CV_COMP_CORREL
-            dist = cv.CompareHist(hist, last_hist, method)
-            change = dist <= 0.99
+    try:
+        last_hist = None
+        while True:
+            frame = get_gray_frame(capture)
+            hist = get_frame_hist(frame)
+            change = False
+            if last_hist is not None:
+                method = cv.CV_COMP_CORREL
+                dist = cv.CompareHist(hist, last_hist, method)
+                change = dist <= 0.99
+                if change:
+                    cv.SaveImage(get_file_name(), frame)
+            last_hist = hist
             if change:
-                cv.SaveImage(get_file_name(), frame)
-        last_hist = hist
-        if change:
-            interval = 0.75
-        else:
-            interval = 1
-        time.sleep(interval)
-        if time.time() - start_time > time_span:
-            break
+                interval = 0.75
+            else:
+                interval = 1
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == '__main__':
